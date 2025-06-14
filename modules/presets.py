@@ -17,13 +17,18 @@ GEMMA_TOKENIZER = None
 
 # ChatGPT 设置
 INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
-API_HOST = "api.openai.com"
-OPENAI_API_BASE = "https://api.openai.com/v1"
-CHAT_COMPLETION_URL = "https://api.openai.com/v1/chat/completions"
-IMAGES_COMPLETION_URL = "https://api.openai.com/v1/images/generations"
-COMPLETION_URL = "https://api.openai.com/v1/completions"
-BALANCE_API_URL="https://api.openai.com/dashboard/billing/credit_grants"
-USAGE_API_URL="https://api.openai.com/dashboard/billing/usage"
+
+IPHost = "localhost:11434"  # 假设localhost是一个变量
+
+API_HOST = f"http://{IPHost}"  # 使用f-string拼接
+OPENAI_API_BASE = f"http://{IPHost}/v1"
+CHAT_COMPLETION_URL = f"http://{IPHost}/v1/chat/completions"
+IMAGES_COMPLETION_URL = f"http://{IPHost}/v1/images/generations"
+COMPLETION_URL = f"http://{IPHost}/v1/completions"
+BALANCE_API_URL = f"http://{IPHost}/dashboard/billing/credit_grants"
+USAGE_API_URL = f"http://{IPHost}/dashboard/billing/usage"
+
+
 HISTORY_DIR = Path("history")
 HISTORY_DIR = "history"
 TEMPLATES_DIR = "templates"
@@ -57,7 +62,7 @@ ONLINE_MODELS = [
     "Ollama"
 ]
 
-# TODO
+# TODO 写死
 client = OllamaClient()
 LOCAL_MODELS = client.get_local_models()
 
