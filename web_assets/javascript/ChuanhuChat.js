@@ -504,14 +504,21 @@ function makeML(str) {
     l = l.substring(l.indexOf("/*") + 3, l.lastIndexOf("*/"))
     return l
 }
-let SAMTInfo = function () {
+let ChuanhuInfo = function () {
     /*
-   SAMT Chat - GUI for Local Ollama and many LLMs
+   ________                      __             ________          __
+  / ____/ /_  __  ______ _____  / /_  __  __   / ____/ /_  ____ _/ /_
+ / /   / __ \/ / / / __ `/ __ \/ __ \/ / / /  / /   / __ \/ __ `/ __/
+/ /___/ / / / /_/ / /_/ / / / / / / / /_/ /  / /___/ / / / /_/ / /_
+\____/_/ /_/\__,_/\__,_/_/ /_/_/ /_/\__,_/   \____/_/ /_/\__,_/\__/
+
+   川虎Chat (Chuanhu Chat) - GUI for ChatGPT API and many LLMs
  */
 }
 let description = `
-© 2025 SAMT, MZhao, Keldos
+© 2023 - 2024 Chuanhu, MZhao, Keldos
+GitHub repository: [https://github.com/GaiZhenbiao/ChuanhuChatGPT]\n
 Enjoy our project!\n
 `
-console.log(`%c${makeML(SAMTInfo)}`,styleTitle1);
+console.log(`%c${makeML(ChuanhuInfo)}`,styleTitle1);
 console.log(`%c${description}`, styleDesc1);

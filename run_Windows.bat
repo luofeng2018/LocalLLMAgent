@@ -10,7 +10,7 @@ if not exist "%~dp0\ChuanhuChat\Scripts" (
 
     cd /d "%~dp0"
     python -m pip install --upgrade pip
-    pip install -r requirements.txt1
+    pip install -r requirements.txt
 )
 
 goto :activate_venv

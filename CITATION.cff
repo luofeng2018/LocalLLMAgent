@@ -1,3 +1,7 @@
 cff-version: 1.2.0
 title: SAMT Chat
+message: >-
+  If you use this software, please cite it using these
+  metadata.
+type: software
 
