@@ -431,7 +431,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         gr.Markdown("# "+i18n("川虎Chat"))
                         gr.HTML(get_html("footer.html").format(
                             versions=versions_html()), elem_id="footer")
-                        gr.Markdown(CHUANHU_DESCRIPTION, elem_id="description")
+                        # gr.Markdown(CHUANHU_DESCRIPTION, elem_id="description")
 
             with gr.Group(elem_id="chuanhu-training"):
                 with gr.Row():

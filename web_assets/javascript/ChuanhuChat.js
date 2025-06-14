@@ -506,18 +506,11 @@ function makeML(str) {
 }
 let ChuanhuInfo = function () {
     /*
-   ________                      __             ________          __
-  / ____/ /_  __  ______ _____  / /_  __  __   / ____/ /_  ____ _/ /_
- / /   / __ \/ / / / __ `/ __ \/ __ \/ / / /  / /   / __ \/ __ `/ __/
-/ /___/ / / / /_/ / /_/ / / / / / / / /_/ /  / /___/ / / / /_/ / /_
-\____/_/ /_/\__,_/\__,_/_/ /_/_/ /_/\__,_/   \____/_/ /_/\__,_/\__/
-
-   川虎Chat (Chuanhu Chat) - GUI for ChatGPT API and many LLMs
+   SAMT Chat - GUI for Local LLMs
  */
 }
 let description = `
-© 2023 - 2024 Chuanhu, MZhao, Keldos
-GitHub repository: [https://github.com/GaiZhenbiao/ChuanhuChatGPT]\n
+© 2025 SAMT, Fengluo
 Enjoy our project!\n
 `
 console.log(`%c${makeML(ChuanhuInfo)}`,styleTitle1);
