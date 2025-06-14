@@ -5,11 +5,6 @@ import gradio as gr
 
 from . import shared
 
-# with open("./assets/ChuanhuChat.js", "r", encoding="utf-8") as f, \
-#     open("./assets/external-scripts.js", "r", encoding="utf-8") as f1:
-#     customJS = f.read()
-#     externalScripts = f1.read()
-
 
 def get_html(filename):
     path = os.path.join(shared.chuanhu_path, "web_assets", "html", filename)

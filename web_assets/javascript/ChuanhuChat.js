@@ -102,12 +102,6 @@ function initialize() {
     menu = gradioApp().querySelector('#menu-area');
     toolbox = gradioApp().querySelector('#toolbox-area');
     grModelDescDiv = gradioApp().querySelector('#gr-model-description');
-    // trainBody = gradioApp().querySelector('#train-body');
-
-    // if (loginUserForm) {
-    // localStorage.setItem("userLogged", true);
-    // userLogged = true;
-    // }
 
     adjustDarkMode();
     adjustSide();
@@ -296,6 +290,8 @@ function toggleDarkMode(isEnabled) {
         document.body.style.backgroundColor = "";
     }
 }
+
+// 监听系统主题模式变化
 function adjustDarkMode() {
     const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
     apSwitch.checked = darkModeQuery.matches;

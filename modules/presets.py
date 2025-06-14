@@ -2,6 +2,8 @@
 import os
 from pathlib import Path
 import gradio as gr
+
+from MyOllama.MyOllama import OllamaClient
 from .webui_locale import I18nAuto
 
 i18n = I18nAuto()  # internationalization
@@ -51,58 +53,13 @@ CHUANHU_TITLE = i18n("SAMT Chat 🚀")
 
 
 ONLINE_MODELS = [
-    "GPT3.5 Turbo",
-    "GPT-4o",
     "GPT-4o-mini",
-    "GPT4 Turbo",
-    "GPT3.5 Turbo Instruct",
-    "GPT4",
-    "o1-preview",
-    "o1-mini",
-    "Claude 3 Haiku",
-    "Claude 3.5 Sonnet",
-    "Claude 3 Opus",
-    "DeepSeek Chat",
-    "DeepSeek R1",
-    "川虎助理",
-    "川虎助理 Pro",
-    "DALL-E 3",
-    "Gemini 2.0 Flash",
-    "Gemini 2.0 Flash-Lite",
-    "Groq LLaMA3 8B",
-    "Groq LLaMA3 70B",
-    "Groq LLaMA2 70B",
-    "Groq Mixtral 8x7B",
-    "Groq Gemma 7B",
-    "GooglePaLM",
-    "Gemma 2B",
-    "Gemma 7B",
-    "xmchat",
-    "Azure OpenAI",
-    "yuanai-1.0-base_10B",
-    "yuanai-1.0-translate",
-    "yuanai-1.0-dialog",
-    "yuanai-1.0-rhythm_poems",
-    "minimax-abab5-chat",
-    "midjourney",
-    # 兼容旧配置文件，待删除
-    "讯飞星火大模型V4.0",
-    "讯飞星火大模型V3.5",
-    "讯飞星火大模型V3.0",
-    "讯飞星火大模型V2.0",
-    "讯飞星火大模型V1.5",
-    # 新的名称
-    "讯飞星火4.0 Ultra",
-    "讯飞星火Max",
-    "讯飞星火Pro 128K",
-    "讯飞星火Pro",
-    "讯飞星火V2.0",
-    "讯飞星火Lite",
-    "ERNIE-Bot-turbo",
-    "ERNIE-Bot",
-    "ERNIE-Bot-4",
     "Ollama"
 ]
+
+# TODO
+client = OllamaClient()
+LOCAL_MODELS = client.get_local_models()
 
 LOCAL_MODELS = [
     "chatglm-6b",
@@ -378,6 +335,7 @@ MODEL_METADATA = {
     "Ollama": {
         "model_name": "ollama",
         "token_limit": 4096,
+        "description": "Ollama 本地部署的大模型",
     },
     "Gemma 2B": {
         "repo_id": "google/gemma-2b-it",
@@ -418,93 +376,7 @@ MODEL_METADATA = {
     "yuanai-1.0-rhythm_poems": {"model_name": "yuanai-1.0-rhythm_poems"},
     "minimax-abab5-chat": {"model_name": "minimax-abab5-chat"},
     "midjourney": {"model_name": "midjourney"},
-    # 兼容旧配置文件，待删除
-    "讯飞星火大模型V4.0": {
-        "model_name": "讯飞星火大模型V4.0",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v4.0/chat",
-            "domain": "4.0Ultra"
-        }
-    },
-    "讯飞星火大模型V3.5": {
-        "model_name": "讯飞星火大模型V3.5",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v3.5/chat",
-            "domain": "generalv3.5"
-        }
-    },
-    "讯飞星火大模型V3.0": {
-        "model_name": "讯飞星火大模型V3.0",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v3.1/chat",
-            "domain": "generalv3"
-        }
-    },
-    "讯飞星火大模型V2.0": {
-        "model_name": "讯飞星火大模型V2.0",
-        "metadata": {
-            "path": "/v2.1/chat",
-            "domain": "generalv2"
-        }
-    },
-    "讯飞星火大模型V1.5": {
-        "model_name": "讯飞星火大模型V1.5",
-        "metadata": {
-            "path": "/v1.1/chat",
-            "domain": "general"
-        }
-    },
-    # 新的名称
-    "讯飞星火4.0 Ultra": {
-        "model_name": "讯飞星火4.0 Ultra",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v4.0/chat",
-            "domain": "4.0Ultra"
-        }
-    },
-    "讯飞星火Max": {
-        "model_name": "讯飞星火Max",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v3.5/chat",
-            "domain": "generalv3.5"
-        }
-    },
 
-    "讯飞星火Pro 128K": {
-        "model_name": "讯飞星火Pro 128K",
-        "token_limit": 131072, # 128 * 1024
-        "metadata": {
-            "path": "/chat/pro-128k",
-            "domain": "pro-128k"
-        }
-    },
-    "讯飞星火Pro": {
-        "model_name": "讯飞星火Pro",
-        "token_limit": 8192,
-        "metadata": {
-            "path": "/v3.1/chat",
-            "domain": "generalv3"
-        }
-    },
-    "讯飞星火V2.0": {
-        "model_name": "讯飞星火V2.0",
-        "metadata": {
-            "path": "/v2.1/chat",
-            "domain": "generalv2"
-        }
-    },
-    "讯飞星火Lite": {
-        "model_name": "讯飞星火Lite",
-        "metadata": {
-            "path": "/v1.1/chat",
-            "domain": "general"
-        }
-    },
     "DeepSeek Chat": {
             "model_name": "deepseek-chat",
             "api_host": "https://api.deepseek.com/v1",
@@ -527,6 +399,13 @@ if os.environ.get('HIDE_LOCAL_MODELS', 'false') == 'true':
     MODELS = ONLINE_MODELS
 else:
     MODELS = ONLINE_MODELS + LOCAL_MODELS
+
+
+MODEL_FACTORYS =["Ollama"]
+FACTORYS_API ="http://192.168.31.77:11434"
+client = OllamaClient()
+OLLAMA_MODELS = client.get_local_models()
+
 
 DEFAULT_MODEL = 0
 
@@ -551,14 +430,7 @@ REDUCE_TOKEN_FACTOR = 0.5 # 与模型token上限想乘，得到目标token数。
 
 REPLY_LANGUAGES = [
     "简体中文",
-    "繁體中文",
     "English",
-    "日本語",
-    "Español",
-    "Français",
-    "Russian",
-    "Deutsch",
-    "한국어",
     "跟随问题语言（不稳定）"
 ]
 

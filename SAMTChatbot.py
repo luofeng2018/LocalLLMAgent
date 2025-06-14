@@ -21,9 +21,6 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 patch_gradio()
 
-# with open("web_assets/css/ChuanhuChat.css", "r", encoding="utf-8") as f:
-#     ChuanhuChatCSS = f.read()
-
 
 def create_new_model():
     return get_model(model_name=MODELS[DEFAULT_MODEL], access_key=my_api_key)[0]
@@ -358,15 +355,24 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     gr.HTML(get_html("close_btn.html").format(
                         obj="box"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-setting-tabs"):
-                    # with gr.Tab(label=i18n("模型")):
+                    with gr.Tab(label=i18n("模型")):
 
+                        model_select_factory= gr.Dropdown(
+                            label=i18n("选择模型提供方"), choices=MODEL_FACTORYS, multiselect=False, value=MODEL_FACTORYS[0],
+                            interactive=True
+                        )
+
+                        api_domain_input = gr.Textbox(
+                            label=i18n("API域名"), value=FACTORYS_API, interactive=True
+                        )
+                        # TODO 后续改成这个
                         # model_select_dropdown = gr.Dropdown(
-                        #     label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL], interactive=True
+                        #     label=i18n("选择模型"), choices=OLLAMA_MODELS, multiselect=False, value=OLLAMA_MODELS[DEFAULT_MODEL], interactive=True
                         # )
-                        # lora_select_dropdown = gr.Dropdown(
-                        #     label=i18n("选择LoRA模型"), choices=[], multiselect=False, interactive=True, visible=False
-                        # )
-                        # with gr.Row():
+
+                        model_select_dropdown = gr.Dropdown(
+                            label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL], interactive=True
+                        )
 
 
                     with gr.Tab(label=i18n("高级")):
@@ -427,8 +433,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
                         gr.Markdown(
-                            '<img alt="Chuanhu Chat logo" src="file=web_assets/icon/any-icon-512.png" style="max-width: 144px;">')
-                        gr.Markdown("# "+i18n("川虎Chat"))
+                            '<img alt="SAMT Chat logo" src="file=web_assets/icon/any-icon-512.png" style="max-width: 144px;">')
+                        gr.Markdown("# "+i18n("SAMT Chat"))
                         gr.HTML(get_html("footer.html").format(
                             versions=versions_html()), elem_id="footer")
                         # gr.Markdown(CHUANHU_DESCRIPTION, elem_id="description")
@@ -750,19 +756,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     default_btn.click(
         reset_default, [], [apihostTxt, proxyTxt, status_display], show_progress=True
     )
-    # changeAPIURLBtn.click(
-    #     change_api_host,
-    #     [apihostTxt],
-    #     [status_display],
-    #     show_progress=True,
-    # )
-    # changeProxyBtn.click(
-    #     change_proxy,
-    #     [proxyTxt],
-    #     [status_display],
-    #     show_progress=True,
-    # )
-    # checkUpdateBtn.click(fn=None, js='manualCheckUpdate')
 
     # Invisible elements
     updateChuanhuBtn.click(
