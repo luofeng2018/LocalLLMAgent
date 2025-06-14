@@ -2,11 +2,33 @@ from __future__ import annotations
 
 import logging
 import os
+from typing import Any
 
 import colorama
 import commentjson as cjson
+from gradio import Dropdown
 
 from modules import config
+from modules.models.Azure import Azure_OpenAI_Client
+from modules.models.ChatGLM import ChatGLM_Client
+from modules.models.ChuanhuAgent import ChuanhuAgent_Client
+from modules.models.Claude import Claude_Client
+from modules.models.DALLE3 import OpenAI_DALLE3_Client
+from modules.models.ERNIE import ERNIE_Client
+from modules.models.GoogleGemini import GoogleGeminiClient
+from modules.models.GoogleGemma import GoogleGemmaClient
+from modules.models.GooglePaLM import Google_PaLM_Client
+from modules.models.Groq import Groq_Client
+from modules.models.LLaMA import LLaMA_Client
+from modules.models.MOSS import MOSS_Client
+from modules.models.Ollama import OllamaClient
+from modules.models.OpenAIInstruct import OpenAI_Instruct_Client
+from modules.models.OpenAIVision import OpenAIVisionClient
+from modules.models.StableLM import StableLM_Client
+from modules.models.XMChat import XMChat
+from modules.models.inspurai import Yuan_Client
+from modules.models.midjourney import Midjourney_Client
+from modules.models.minimax import MiniMax_Client
 
 from ..index_func import *
 from ..presets import *
@@ -23,7 +45,10 @@ def get_model(
     system_prompt=None,
     user_name="",
     original_model = None
-) -> BaseLLMModel:
+) -> tuple[
+         GoogleGemmaClient | OllamaClient | OpenAI_DALLE3_Client | ERNIE_Client | Claude_Client | Midjourney_Client | Azure_OpenAI_Client | GoogleGeminiClient | Google_PaLM_Client | ChuanhuAgent_Client | MiniMax_Client | Yuan_Client | MOSS_Client | StableLM_Client | XMChat | LLaMA_Client | Groq_Client | ChatGLM_Client | OpenAI_Instruct_Client | OpenAIVisionClient | None, str | Any, dict, dict, str | None | Any, Any, Any, Any] | \
+     tuple[
+         GoogleGemmaClient | OllamaClient | OpenAI_DALLE3_Client | ERNIE_Client | Claude_Client | Midjourney_Client | Azure_OpenAI_Client | GoogleGeminiClient | Google_PaLM_Client | ChuanhuAgent_Client | MiniMax_Client | Yuan_Client | MOSS_Client | StableLM_Client | XMChat | LLaMA_Client | Groq_Client | ChatGLM_Client | OpenAI_Instruct_Client | OpenAIVisionClient | None, str | Any, dict, Dropdown, str | None | Any, Any, Any, Any]:
     msg = i18n("模型设置为了：") + f" {model_name}"
     model_type = ModelType.get_type(model_name)
     lora_selector_visibility = False
@@ -133,9 +158,11 @@ def get_model(
             model = OpenAI_DALLE3_Client(model_name, api_key=access_key, user_name=user_name)
         elif model_type == ModelType.Ollama:
             from .Ollama import OllamaClient
-            ollama_host = os.environ.get("OLLAMA_HOST", access_key)
-            model = OllamaClient(model_name, user_name=user_name, backend_model=lora_model_path)
-            model_list = model.get_model_list()
+            # ollama_host = os.environ.get("OLLAMA_HOST", access_key)
+            # model = OllamaClient(model_name, user_name=user_name, backend_model=lora_model_path)
+            url =  "http://localhost:11434"
+            model = OllamaClient(url)
+            model_list = model.get_local_models()
             lora_selector_visibility = True
             lora_choices = [i["name"] for i in model_list["models"]]
         elif model_type == ModelType.GoogleGemma:
