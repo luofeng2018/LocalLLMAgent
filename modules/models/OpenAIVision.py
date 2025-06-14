@@ -42,8 +42,12 @@ class OpenAIVisionClient(BaseLLMModel):
             self.api_host, self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = shared.state.api_host, shared.state.chat_completion_url, shared.state.images_completion_url, shared.state.openai_api_base, shared.state.balance_api_url, shared.state.usage_api_url
         self._refresh_header()
 
+    # TODO 获取回答
     def get_answer_stream_iter(self):
         response = self._get_response(stream=True)
+        # client = OllamaClient()
+        # response = client.generate_response("你好",self.history,"deepseek-r1:1.5b",True)
+
         if response is not None:
             iter = self._decode_chat_response(response)
             partial_text = ""
@@ -182,6 +186,10 @@ class OpenAIVisionClient(BaseLLMModel):
         if system_prompt is not None and "o1" not in self.model_name:
             history = [construct_system(system_prompt), *history]
 
+        # TODO 暂时写死
+        self.model_name = "deepseek-r1:1.5b"
+
+
         payload = {
             "model": self.model_name,
             "messages": history,
@@ -208,6 +216,14 @@ class OpenAIVisionClient(BaseLLMModel):
             timeout = TIMEOUT_STREAMING
         else:
             timeout = TIMEOUT_ALL
+
+        #  TODO 暂时写死
+        # client = OllamaClient()
+        # # client.generate_response()
+        # response = ["111111"]
+        self.chat_completion_url = "http://localhost:11434/v1/chat/completions"
+
+
 
         with retrieve_proxy():
             try:
