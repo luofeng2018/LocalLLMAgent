@@ -1,6 +1,4 @@
 
-// ChuanhuChat core javascript
-
 const MAX_HISTORY_LENGTH = 32;
 
 var key_down_history = [];
@@ -248,13 +246,6 @@ function checkModel() {
             modelDesc.innerText = "No Description Found!";
         }
     }
-    // model.addEventListener('blur', ()=>{
-    //     setTimeout(()=>{
-    //         checkGPT();
-    //         checkXMChat();
-    //         checkDescription();
-    //     }, 100);
-    // });
 }
 
 function bindChatbotPlaceholderButtons() {

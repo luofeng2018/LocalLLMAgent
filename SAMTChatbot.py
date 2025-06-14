@@ -358,7 +358,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     with gr.Tab(label=i18n("模型")):
 
                         model_select_factory= gr.Dropdown(
-                            label=i18n("选择模型提供方"), choices=MODEL_FACTORYS, multiselect=False, value=MODEL_FACTORYS[0],
+                            label=i18n("模型提供方"), choices=MODEL_FACTORYS, multiselect=False, value=MODEL_FACTORYS[0],
                             interactive=True
                         )
 
@@ -402,34 +402,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
                         logout_btn = gr.Button("Logout", link="/logout")
 
-                    with gr.Tab(i18n("网络")):
-                        gr.Markdown(
-                            i18n("⚠️ 为保证API-Key安全，请在配置文件`config.json`中修改网络设置"), elem_id="netsetting-warning")
-                        default_btn = gr.Button(i18n("🔙 恢复默认网络设置"))
-                        # 网络代理
-                        proxyTxt = gr.Textbox(
-                            show_label=True,
-                            placeholder=i18n("未设置代理..."),
-                            label=i18n("代理地址"),
-                            value=config.http_proxy,
-                            lines=1,
-                            interactive=False,
-                            # container=False,
-                            elem_classes="view-only-textbox no-container",
-                        )
-                        # changeProxyBtn = gr.Button(i18n("🔄 设置代理地址"))
-
-                        # 优先展示自定义的api_host
-                        apihostTxt = gr.Textbox(
-                            show_label=True,
-                            placeholder="api.openai.com",
-                            label="OpenAI API-Host",
-                            value=config.api_host or shared.API_HOST,
-                            lines=1,
-                            interactive=False,
-                            # container=False,
-                            elem_classes="view-only-textbox no-container",
-                        )
 
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
                         gr.Markdown(
@@ -584,18 +556,15 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
     # Chatbot
     cancelBtn.click(interrupt, [current_model], [])
+    # 绑定提交信息
 
     user_input.submit(**transfer_input_args).then(**
                                                   chatgpt_predict_args).then(**end_outputing_args).then(**auto_name_chat_history_args)
     user_input.submit(**get_usage_args)
 
-    # user_input.submit(auto_name_chat_history, [current_model, user_question, chatbot, user_name], [historySelectList], show_progress=False)
-
     submitBtn.click(**transfer_input_args).then(**chatgpt_predict_args,
                                                 api_name="predict").then(**end_outputing_args).then(**auto_name_chat_history_args)
     submitBtn.click(**get_usage_args)
-
-    # submitBtn.click(auto_name_chat_history, [current_model, user_question, chatbot, user_name], [historySelectList], show_progress=False)
 
     index_files.upload(handle_file_upload, [current_model, index_files, chatbot, language_select_dropdown], [
                        index_files, chatbot, status_display])
@@ -753,9 +722,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     user_identifier_txt.input(set_user_identifier, [
                                current_model, user_identifier_txt], None, show_progress=False)
 
-    default_btn.click(
-        reset_default, [], [apihostTxt, proxyTxt, status_display], show_progress=True
-    )
+    # default_btn.click(
+    #     reset_default, [], [apihostTxt, proxyTxt, status_display], show_progress=True
+    # )
 
     # Invisible elements
     updateChuanhuBtn.click(
