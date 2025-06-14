@@ -66,20 +66,7 @@ ONLINE_MODELS = [
 client = OllamaClient()
 LOCAL_MODELS = client.get_local_models()
 
-LOCAL_MODELS = [
-    "chatglm-6b",
-    "chatglm-6b-int4",
-    "chatglm-6b-int4-ge",
-    "chatglm2-6b",
-    "chatglm2-6b-int4",
-    "chatglm3-6b",
-    "chatglm3-6b-32k",
-    "StableLM",
-    "MOSS",
-    "Llama-2-7B-Chat",
-    "Qwen 7B",
-    "Qwen 14B"
-]
+
 
 DEFAULT_METADATA = {
     "repo_id": None, # HuggingFace repo id, used if this model is meant to be downloaded from HuggingFace then run locally
@@ -109,296 +96,31 @@ DEFAULT_METADATA = {
 }
 
 # Additional metadata for online and local models
-MODEL_METADATA = {
-    "Llama-2-7B":{
-        "repo_id": "TheBloke/Llama-2-7B-GGUF",
-        "filelist": ["llama-2-7b.Q6_K.gguf"],
-    },
-    "Llama-2-7B-Chat":{
-        "repo_id": "TheBloke/Llama-2-7b-Chat-GGUF",
-        "filelist": ["llama-2-7b-chat.Q6_K.gguf"],
-    },
-    "Qwen 7B": {
-        "repo_id": "Qwen/Qwen-7B-Chat-Int4",
-    },
-    "Qwen 14B": {
-        "repo_id": "Qwen/Qwen-14B-Chat-Int4",
-    },
-    "GPT3.5 Turbo": {
-        "model_name": "gpt-3.5-turbo",
-        "description": "gpt3.5turbo_description",
-        "token_limit": 4096,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT3.5 Turbo Instruct": {
-        "model_name": "gpt-3.5-turbo-instruct",
-        "description": "gpt3.5turbo_instruct_description",
-        "token_limit": 4096,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT3.5 Turbo 16K": {
-        "model_name": "gpt-3.5-turbo-16k",
-        "description": "gpt3.5turbo_16k_description",
-        "token_limit": 16384,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT3.5 Turbo 0301": {
-        "model_name": "gpt-3.5-turbo-0301",
-        "token_limit": 4096,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT3.5 Turbo 0613": {
-        "model_name": "gpt-3.5-turbo-0613",
-        "token_limit": 4096,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT3.5 Turbo 1106": {
-    "model_name": "gpt-3.5-turbo-1106",
-    "token_limit": 16384,
-    "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-green.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT4": {
-        "model_name": "gpt-4",
-        "description": "gpt4_description",
-        "token_limit": 8192,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT4 32K": {
-        "model_name": "gpt-4-32k",
-        "description": "gpt4_32k_description",
-        "token_limit": 32768,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT4 Turbo": {
-        "model_name": "gpt-4-turbo",
-        "description": "gpt4turbo_description",
-        "token_limit": 128000,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT-4o": {
-        "model_name": "gpt-4o",
-        "description": "gpt4o_description",
-        "token_limit": 128000,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "GPT-4o-mini": {
-        "model_name": "gpt-4o-mini",
-        "description": "gpt4omini_description",
-        "token_limit": 128000,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "o1-preview": {
-        "model_name": "o1-preview",
-        "description": "o1_description",
-        "token_limit": 128000,
-        "multimodal": False,
-        "model_type": "OpenAIVision",
-        "stream": False,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "o1-mini": {
-        "model_name": "o1-mini",
-        "description": "o1_description",
-        "token_limit": 128000,
-        "multimodal": False,
-        "model_type": "OpenAIVision",
-        "stream": False,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/openai-black.webp",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "Claude 3 Haiku": {
-        "model_name": "claude-3-haiku-20240307",
-        "description": "claude3_haiku_description",
-        "token_limit": 200000,
-        "max_generation": 4096,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/claude-3.jpg",
-            "slogan": i18n("claude_default_slogan"),
-        }
-    },
-    "Claude 3.5 Sonnet": {
-        "model_name": "claude-3-5-sonnet-20240620",
-        "description": "claude3_sonnet_description",
-        "token_limit": 200000,
-        "max_generation": 4096,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/claude-3.jpg",
-            "slogan": i18n("claude_default_slogan"),
-        }
-    },
-    "Claude 3 Opus": {
-        "model_name": "claude-3-opus-20240229",
-        "description": "claude3_opus_description",
-        "token_limit": 200000,
-        "max_generation": 4096,
-        "multimodal": True,
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/claude-3.jpg",
-            "slogan": i18n("claude_default_slogan"),
-        }
-    },
-    "川虎助理": {
-        "model_name": "川虎助理",
-        "description": i18n("chuanhu_description"),
-        "placeholder": {
-            "logo": "file=web_assets/icon/any-icon-512.png",
-            "logo_rounded": "false",
-            "slogan": i18n("chuanhu_slogan"),
-            "question_1": i18n("chuanhu_question_1"),
-            "question_2": i18n("chuanhu_question_2"),
-            "question_3": i18n("chuanhu_question_3"),
-            "question_4": i18n("chuanhu_question_4"),
-        }
-    },
-    "川虎助理 Pro": {
-        "model_name": "川虎助理 Pro",
-        "description": "类似 AutoGPT，全自动解决你的问题",
-        "placeholder": {
-            "logo": "file=web_assets/icon/any-icon-512.png",
-            "logo_rounded": "false",
-            "slogan": "川虎Pro今天能帮你做些什么？",
-            "question_1": "明天杭州天气如何？",
-            "question_2": "最近 Apple 发布了什么新品？",
-            "question_3": "现在显卡的价格如何？",
-            "question_4": "TikTok 上有什么新梗？",
-        }
-    },
-    "DALL-E 3": {"model_name": "dall-e-3"},
-    "ERNIE-Bot-turbo": {
-        "model_name": "ERNIE-Bot-turbo",
-        "token_limit": 1024,
-    },
-    "ERNIE-Bot": {
-        "model_name": "ERNIE-Bot",
-        "token_limit": 1024,
-    },
-    "ERNIE-Bot-4": {
-        "model_name": "ERNIE-Bot-4",
-        "token_limit": 1024,
-    },
-    "Gemini 2.0 Flash": {
-        "model_name": "gemini-2.0-flash",
-        "token_limit": 1048576,
-        "api_host": "generativelanguage.googleapis.com",
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/gemini.svg",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "Gemini 2.0 Flash-Lite": {
-        "model_name": "gemini-2.0-flash-lite",
-        "token_limit": 1048576,
-        "api_host": "generativelanguage.googleapis.com",
-        "placeholder": {
-            "logo": "file=web_assets/model_logos/gemini.svg",
-            "slogan": i18n("gpt_default_slogan"),
-        }
-    },
-    "Ollama": {
-        "model_name": "ollama",
-        "token_limit": 4096,
-        "description": "Ollama 本地部署的大模型",
-    },
-    "Gemma 2B": {
-        "repo_id": "google/gemma-2b-it",
-        "model_name": "gemma-2b-it",
-        "token_limit": 8192,
-    },
-    "Gemma 7B": {
-        "repo_id": "google/gemma-7b-it",
-        "model_name": "gemma-7b-it",
-        "token_limit": 8192,
-    },
-    "Groq LLaMA3 8B": {
-        "model_name": "llama3-8b-8192",
-        "description": "groq_llama3_8b_description",
-        "token_limit": 8192,
-    },
-    "Groq LLaMA3 70B": {
-        "model_name": "llama3-70b-8192",
-        "description": "groq_llama3_70b_description",
-        "token_limit": 8192,
-    },
-    "Groq Mixtral 8x7B": {
-        "model_name": "mixtral-8x7b-32768",
-        "description": "groq_mixtral_8x7b_description",
-        "token_limit": 32768,
-    },
-    "Groq Gemma 7B": {
-        "model_name": "gemma-7b-it",
-        "description": "groq_gemma_7b_description",
-        "token_limit": 8192,
-    },
-    "GooglePaLM": {"model_name": "models/chat-bison-001"},
-    "xmchat": {"model_name": "xmchat"},
-    "Azure OpenAI": {"model_name": "azure-openai"},
-    "yuanai-1.0-base_10B": {"model_name": "yuanai-1.0-base_10B"},
-    "yuanai-1.0-translate": {"model_name": "yuanai-1.0-translate"},
-    "yuanai-1.0-dialog": {"model_name": "yuanai-1.0-dialog"},
-    "yuanai-1.0-rhythm_poems": {"model_name": "yuanai-1.0-rhythm_poems"},
-    "minimax-abab5-chat": {"model_name": "minimax-abab5-chat"},
-    "midjourney": {"model_name": "midjourney"},
-
-    "DeepSeek Chat": {
-            "model_name": "deepseek-chat",
-            "api_host": "https://api.deepseek.com/v1",
-            "description": "DeepSeek V3 Chat",
-            "token_limit": 64000,
-            "multimodal": False,
-            "model_type": "DeepSeek"
-        },
-    "DeepSeek R1": {
-        "model_name": "deepseek-reasoner",
-        "api_host": "https://api.deepseek.com/v1",
-        "description": "DeepSeek V3 Chat",
+MODEL_METADATA = {}
+# 循环LOCAL_MODELS数组
+for model in LOCAL_MODELS:
+    MODEL_METADATA[model] = {
+        "model_name": model,
+        "api_host": "OPENAI_API_BASE",  # 这里请根据实际情况替换
+        "description": model,
         "token_limit": 64000,
         "multimodal": False,
-        "model_type": "DeepSeek"
+        "model_type": model.split("-")[0]  # 根据模型名称来推断模型类型
     }
-}
+
+for model in ONLINE_MODELS:
+    MODEL_METADATA[model] = {
+        "model_name": model,
+        "api_host": "OPENAI_API_BASE",  # 这里请根据实际情况替换
+        "description": model,
+        "token_limit": 64000,
+        "multimodal": False,
+        "model_type": model.split("-")[0]  # 根据模型名称来推断模型类型
+    }
+
+
+print(MODEL_METADATA)
+
 
 if os.environ.get('HIDE_LOCAL_MODELS', 'false') == 'true':
     MODELS = ONLINE_MODELS

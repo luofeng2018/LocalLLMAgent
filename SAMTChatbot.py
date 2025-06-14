@@ -191,7 +191,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         obj="toolbox"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-toolbox-tabs"):
                     with gr.Tab(label=i18n("对话")):
-                        with gr.Accordion(label=i18n("模型"), open=not HIDE_MY_KEY, visible=not HIDE_MY_KEY):
+                        with gr.Accordion(label=i18n("模型"), open=not HIDE_MY_KEY, visible=False):
                             modelDescription = gr.Markdown(
                                 elem_id="gr-model-description",
                                 value=i18n(MODEL_METADATA[MODELS[DEFAULT_MODEL]]["description"]),
@@ -202,9 +202,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                 placeholder=f"Your API-key...",
                                 value=hide_middle_chars(user_api_key.value),
                                 type="password",
-                                visible=not HIDE_MY_KEY,
+                                visible=False,
                                 label="API-Key",
-                                elem_id="api-key"
+                                elem_id="api-key",
                             )
                             if multi_api_key:
                                 usageTxt = gr.Markdown(i18n(
