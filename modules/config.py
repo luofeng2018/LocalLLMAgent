@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from . import shared
 from . import presets
+from .models.MyOllama import OllamaClient
 from .presets import i18n
 
 
@@ -329,12 +330,18 @@ assert server_port is None or type(server_port) == int, "要求port设置为int�
 
 # 设置默认model
 default_model = config.get("default_model", "GPT-4o-mini")
+
+# client = OllamaClient()
+# OLLAMA_MODELS = client.get_local_models()
+# default_model = OLLAMA_MODELS[0]
+
+
 try:
     if default_model in presets.MODELS:
         presets.DEFAULT_MODEL = presets.MODELS.index(default_model)
     else:
         presets.DEFAULT_MODEL = presets.MODELS.index(next((k for k, v in presets.MODEL_METADATA.items() if v.get("model_name") == default_model), None))
-    logging.info("默认模型设置为了：" + str(presets.MODELS[presets.DEFAULT_MODEL]))
+    logging.info("默认模型：" + str(presets.MODELS[presets.DEFAULT_MODEL]))
 except ValueError:
     logging.error("你填写的默认模型" + default_model + "不存在！请从下面的列表中挑一个填写：" + str(presets.MODELS))
 
@@ -349,7 +356,7 @@ try:
             presets.RENAME_MODEL = presets.MODELS.index(rename_model)
         else:
             presets.RENAME_MODEL = presets.MODELS.index(next((k for k, v in presets.MODEL_METADATA.items() if v.get("model_name") == rename_model), None))
-        logging.info("默认命名模型设置为了：" + str(presets.MODELS[presets.RENAME_MODEL]))
+        logging.info("默认命名模型设置：" + str(presets.MODELS[presets.RENAME_MODEL]))
 except ValueError:
     logging.error("你填写的默认命名模型" + rename_model + "不存在！请从下面的列表中挑一个填写：" + str(presets.MODELS))
 

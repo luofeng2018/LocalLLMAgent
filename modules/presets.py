@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import gradio as gr
 
-from MyOllama.MyOllama import OllamaClient
+from modules.models.MyOllama import OllamaClient
 from .webui_locale import I18nAuto
 
 i18n = I18nAuto()  # internationalization
