@@ -10,18 +10,16 @@ from modules.train_func import *
 from modules.repo import *
 from modules.webui import *
 from modules.overwrites import patch_gradio
-from modules.presets import *
 from modules.utils import *
 from modules.config import *
 from modules import config
 import gradio as gr
-import colorama
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 patch_gradio()
 
-# with open("web_assets/css/ChuanhuChat.css", "r", encoding="utf-8") as f:
+# with open("web_assets/css/ChanChat.css", "r", encoding="utf-8") as f:
 #     ChuanhuChatCSS = f.read()
 
 
@@ -46,16 +44,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     with gr.Row(elem_id="float-display"):
         user_info = gr.Markdown(
             value="getting user info...", elem_id="user-info")
-        update_info = gr.HTML(get_html("update.html").format(
-            current_version=repo_tag_html(),
-            version_time=version_time(),
-            cancel_btn=i18n("取消"),
-            update_btn=i18n("更新"),
-            seenew_btn=i18n("详情"),
-            ok_btn=i18n("好"),
-            close_btn=i18n("关闭"),
-            reboot_btn=i18n("立即重启"),
-        ), visible=check_update)
 
     with gr.Row(equal_height=True, elem_id="chuanhu-body"):
 
@@ -428,7 +416,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
                         gr.Markdown(
                             '<img alt="Chuanhu Chat logo" src="file=web_assets/icon/any-icon-512.png" style="max-width: 144px;">')
-                        gr.Markdown("# "+i18n("川虎Chat"))
+                        gr.Markdown("# "+i18n("SAMT Chat"))
                         gr.HTML(get_html("footer.html").format(
                             versions=versions_html()), elem_id="footer")
                         gr.Markdown(CHUANHU_DESCRIPTION, elem_id="description")
@@ -797,7 +785,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
         js='(a,b)=>{return bgSelectHistory(a,b);}'
     )
 # 默认开启本地服务器，默认可以直接从IP访问，默认不创建公开分享链接
-demo.title = i18n("川虎Chat 🚀")
+demo.title = i18n("SAMT Chat 🚀")
 
 if __name__ == "__main__":
     reload_javascript()

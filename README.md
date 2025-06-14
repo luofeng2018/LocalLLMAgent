@@ -53,15 +53,15 @@
 在终端执行以下命令：
 
 ```shell
-git clone https://github.com/GaiZhenbiao/ChuanhuChatGPT.git
 cd ChuanhuChatGPT
 pip install -r requirements.txt
 ```
+git clone https://github.com/GaiZhenbiao/ChuanhuChatGPT.git
 
 然后，在项目文件夹中复制一份 `config_example.json`，并将其重命名为 `config.json`，在其中填入 `API-Key` 等设置。
 
 ```shell
-python ChuanhuChatbot.py
+python SAMTChatbot.py
 ```
 
 一个浏览器窗口将会自动打开，此时您将可以使用 **川虎Chat** 与ChatGPT或其他模型进行对话。

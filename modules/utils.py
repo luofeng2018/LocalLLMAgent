@@ -1,33 +1,32 @@
 # -*- coding:utf-8 -*-
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Tuple, Type
-from enum import Enum
-import logging
-import commentjson as json
-import os
-import datetime
+
 import csv
-import threading
-import requests
+import datetime
+import getpass
+import hashlib
 import hmac
 import html
-import hashlib
+import logging
+import threading
+from enum import Enum
+from typing import TYPE_CHECKING, List
 
-import gradio as gr
+import colorama
+import commentjson as json
+import pandas as pd
 import regex as re
-import getpass
-from pypinyin import lazy_pinyin
+import requests
 import tiktoken
 from markdown import markdown
 from pygments import highlight
-from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
-import pandas as pd
-import colorama
+from pygments.lexers import get_lexer_by_name
+from pypinyin import lazy_pinyin
 
+from modules.config import retrieve_proxy, hide_history_when_not_logged_in, admin_list
 from modules.presets import *
 from . import shared
-from modules.config import retrieve_proxy, hide_history_when_not_logged_in, admin_list
 
 if TYPE_CHECKING:
     from typing import TypedDict
