@@ -2,38 +2,28 @@ from __future__ import annotations
 
 import base64
 import json
-import time
 import logging
-import os
-import shutil
 import time
 import traceback
 from collections import deque
-from enum import Enum
 from io import BytesIO
 from itertools import islice
 from threading import Condition, Thread
-from typing import Any, Dict, List, Optional
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, TypeVar, Union
+from typing import Any, Optional, Union
 from uuid import UUID
-from langchain_core.outputs import ChatGenerationChunk, GenerationChunk
-from gradio.utils import get_upload_folder
-from gradio.processing_utils import save_file_to_cache
 
-import colorama
 import PIL
 import urllib3
 from duckduckgo_search import DDGS
+from gradio.processing_utils import save_file_to_cache
+from gradio.utils import get_upload_folder
 from huggingface_hub import hf_hub_download
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chat_models.base import BaseChatModel
-from langchain.schema import (AgentAction, AgentFinish, AIMessage, BaseMessage,
-                              HumanMessage, SystemMessage)
+from langchain.schema import (AgentAction, AgentFinish, AIMessage, HumanMessage, SystemMessage)
+from langchain_core.outputs import ChatGenerationChunk, GenerationChunk
 
-from .. import shared
-from ..config import retrieve_proxy, auth_list
 from ..index_func import *
-from ..presets import *
 from ..utils import *
 
 GRADIO_CACHE = get_upload_folder()
@@ -135,131 +125,6 @@ class ChuanhuCallbackHandler(BaseCallbackHandler):
         self.callback(token)
 
 
-class ModelType(Enum):
-    Unknown = -1
-    OpenAI = 0
-    ChatGLM = 1
-    LLaMA = 2
-    XMChat = 3
-    StableLM = 4
-    MOSS = 5
-    YuanAI = 6
-    Minimax = 7
-    ChuanhuAgent = 8
-    GooglePaLM = 9
-    LangchainChat = 10
-    Midjourney = 11
-    Spark = 12
-    OpenAIInstruct = 13
-    Claude = 14
-    Qwen = 15
-    OpenAIVision = 16
-    ERNIE = 17
-    DALLE3 = 18
-    GoogleGemini = 19
-    GoogleGemma = 20
-    Ollama = 21
-    Groq = 22
-    DeepSeek = 23
-
-    @classmethod
-    def get_type(cls, model_name: str):
-        # 1. get model type from model metadata (if exists)
-        model_type = MODEL_METADATA[model_name]["model_type"]
-        if model_type is not None:
-            for member in cls:
-                if member.name == model_type:
-                    return member
-
-        # 2. infer model type from model name
-        model_type = None
-        model_name_lower = model_name.lower()
-        if "gpt" in model_name_lower:
-            try:
-                assert MODEL_METADATA[model_name]["multimodal"] == True
-                model_type = ModelType.OpenAIVision
-            except:
-                if "instruct" in model_name_lower:
-                    model_type = ModelType.OpenAIInstruct
-                elif "vision" in model_name_lower:
-                    model_type = ModelType.OpenAIVision
-                else:
-                    model_type = ModelType.OpenAI
-        elif "chatglm" in model_name_lower:
-            model_type = ModelType.ChatGLM
-        elif "groq" in model_name_lower:
-            model_type = ModelType.Groq
-        elif "ollama" in model_name_lower:
-            model_type = ModelType.Ollama
-        elif "llama" in model_name_lower or "alpaca" in model_name_lower:
-            model_type = ModelType.LLaMA
-        elif "xmchat" in model_name_lower:
-            model_type = ModelType.XMChat
-        elif "stablelm" in model_name_lower:
-            model_type = ModelType.StableLM
-        elif "moss" in model_name_lower:
-            model_type = ModelType.MOSS
-        elif "yuanai" in model_name_lower:
-            model_type = ModelType.YuanAI
-        elif "minimax" in model_name_lower:
-            model_type = ModelType.Minimax
-        elif "川虎助理" in model_name_lower:
-            model_type = ModelType.ChuanhuAgent
-        elif "palm" in model_name_lower:
-            model_type = ModelType.GooglePaLM
-        elif "gemini" in model_name_lower:
-            model_type = ModelType.GoogleGemini
-        elif "midjourney" in model_name_lower:
-            model_type = ModelType.Midjourney
-        elif "azure" in model_name_lower or "api" in model_name_lower:
-            model_type = ModelType.LangchainChat
-        elif "讯飞星火" in model_name_lower:
-            model_type = ModelType.Spark
-        elif "claude" in model_name_lower:
-            model_type = ModelType.Claude
-        elif "qwen" in model_name_lower:
-            model_type = ModelType.Qwen
-        elif "ernie" in model_name_lower:
-            model_type = ModelType.ERNIE
-        elif "dall" in model_name_lower:
-            model_type = ModelType.DALLE3
-        elif "gemma" in model_name_lower:
-            model_type = ModelType.GoogleGemma
-        elif "deepseek" in model_name_lower:
-            model_type = ModelType.DeepSeek
-        else:
-            model_type = ModelType.LLaMA
-        return model_type
-
-
-def download(repo_id, filename, retry=10):
-    if os.path.exists("./models/downloaded_models.json"):
-        with open("./models/downloaded_models.json", "r") as f:
-            downloaded_models = json.load(f)
-        if repo_id in downloaded_models:
-            return downloaded_models[repo_id]["path"]
-    else:
-        downloaded_models = {}
-    while retry > 0:
-        try:
-            model_path = hf_hub_download(
-                repo_id=repo_id,
-                filename=filename,
-                cache_dir="models",
-                resume_download=True,
-            )
-            downloaded_models[repo_id] = {"path": model_path}
-            with open("./models/downloaded_models.json", "w") as f:
-                json.dump(downloaded_models, f)
-            break
-        except:
-            print("Error downloading model, retrying...")
-            retry -= 1
-    if retry == 0:
-        raise Exception("Error downloading model, please try again later.")
-    return model_path
-
-
 class BaseLLMModel:
     def __init__(
         self,
@@ -291,7 +156,6 @@ class BaseLLMModel:
         self.need_api_key = self.api_key is not None
         self.history = []
         self.all_token_counts = []
-        self.model_type = ModelType.get_type(model_name)
         self.history_file_path = get_first_history_name(user)
         self.user_name = user
         self.chatbot = []
@@ -450,7 +314,6 @@ class BaseLLMModel:
             status = i18n("总结完成")
             logging.info(i18n("生成内容总结中……"))
             os.environ["OPENAI_API_KEY"] = self.api_key
-            from langchain.callbacks import StdOutCallbackHandler
             from langchain.chains.summarize import load_summarize_chain
             from langchain.chat_models import ChatOpenAI
             from langchain.prompts import PromptTemplate
@@ -1205,49 +1068,3 @@ class BaseLLMModel:
             return "jpeg"
 
 
-class Base_Chat_Langchain_Client(BaseLLMModel):
-    def __init__(self, model_name, user_name=""):
-        super().__init__(model_name, user=user_name)
-        self.need_api_key = False
-        self.model = self.setup_model()
-
-    def setup_model(self):
-        # inplement this to setup the model then return it
-        pass
-
-    def _get_langchain_style_history(self):
-        history = [SystemMessage(content=self.system_prompt)]
-        for i in self.history:
-            if i["role"] == "user":
-                history.append(HumanMessage(content=i["content"]))
-            elif i["role"] == "assistant":
-                history.append(AIMessage(content=i["content"]))
-        return history
-
-    def get_answer_at_once(self):
-        assert isinstance(
-            self.model, BaseChatModel
-        ), "model is not instance of LangChain BaseChatModel"
-        history = self._get_langchain_style_history()
-        response = self.model.generate(history)
-        return response.content, sum(response.content)
-
-    def get_answer_stream_iter(self):
-        it = CallbackToIterator()
-        assert isinstance(
-            self.model, BaseChatModel
-        ), "model is not instance of LangChain BaseChatModel"
-        history = self._get_langchain_style_history()
-
-        def thread_func():
-            self.model(
-                messages=history, callbacks=[ChuanhuCallbackHandler(it.callback)]
-            )
-            it.finish()
-
-        t = Thread(target=thread_func)
-        t.start()
-        partial_text = ""
-        for value in it:
-            partial_text += value
-            yield partial_text

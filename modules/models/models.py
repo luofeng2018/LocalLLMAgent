@@ -11,7 +11,7 @@ from modules import config
 from ..index_func import *
 from ..presets import *
 from ..utils import *
-from .base_model import BaseLLMModel, ModelType
+from .base_model import BaseLLMModel
 from .OllamaVision import OllamaVisionClient
 
 def get_model(
@@ -25,13 +25,10 @@ def get_model(
     original_model = None
 ) -> BaseLLMModel:
     msg = i18n("模型设置为：") + f" {model_name}"
-    model_type = ModelType.get_type(model_name)
     lora_selector_visibility = False
     lora_choices = ["No LoRA"]
     dont_change_lora_selector = False
-    if model_type != ModelType.OpenAI:
-        config.local_embedding = True
-    # del current_model.model
+
     model = original_model
     try:
          logging.info(f"正在加载 Ollama 模型: {model_name}")

@@ -57,11 +57,6 @@ INDEX_QUERY_TEMPRATURE = 1.0
 CHUANHU_TITLE = i18n("SAMT Chat 🚀")
 
 
-# ONLINE_MODELS = [
-#     "GPT-4o-mini",
-#     "Ollama"
-# ]
-
 # TODO 写死
 client = OllamaClient(API_HOST)
 LOCAL_MODELS = client.get_local_models()

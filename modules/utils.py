@@ -1335,7 +1335,7 @@ def setup_wizard():
             ],
             "是否更改默认模型？如果设置，软件启动时会自动加载该模型，无需在 UI 中手动选择。目前的默认模型为 GPT3.5 Turbo。可选的在线模型有："
             + "\n"
-            + "\n".join(ONLINE_MODELS)
+            # + "\n".join(ONLINE_MODELS)
             + "\n"
             + "可选的本地模型为："
             + "\n"
@@ -1449,7 +1449,7 @@ def setup_wizard():
                 )
             ],
             "是否指定可用模型列表？如果设置，将只会在 UI 中显示指定的模型。默认展示所有模型。可用的模型有："
-            + "\n".join(ONLINE_MODELS)
+            # + "\n".join(ONLINE_MODELS)
             + "\n".join(LOCAL_MODELS),
         )
         # 添加模型到列表

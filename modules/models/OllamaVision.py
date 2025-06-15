@@ -31,8 +31,6 @@ class OllamaVisionClient(BaseLLMModel):
     # TODO 获取回答
     def get_answer_stream_iter(self):
         response = self._get_response(stream=True)
-        # client = OllamaClient()
-        # response = client.generate_response("你好",self.history,"deepseek-r1:1.5b",True)
 
         if response is not None:
             iter = self._decode_chat_response(response)
@@ -200,11 +198,7 @@ class OllamaVisionClient(BaseLLMModel):
             timeout = TIMEOUT_ALL
 
         #  TODO 暂时写死
-        # client = OllamaClient()
-        # # client.generate_response()
-        # response = ["111111"]
         self.chat_completion_url = "http://localhost:11434/v1/chat/completions"
-
 
 
         with retrieve_proxy():

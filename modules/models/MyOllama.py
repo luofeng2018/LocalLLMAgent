@@ -1,4 +1,6 @@
 # 导入所需库
+import socket
+
 import requests  # 用于发送HTTP请求
 import json  # 用于JSON数据解析和序列化
 from typing import List, Tuple, Generator, Dict, Any, Optional  # 类型提示支持
@@ -114,106 +116,106 @@ class OllamaClient:
         return response.json()["message"]["content"]
 
 
-# # 主程序入口
-# if __name__ == "__main__":
-#     # 导入Gradio库 - 用于构建Web UI界面
-#     import gradio as gr
-#
-#     # 创建客户端实例
-#     client = OllamaClient()
-#
-#     # 创建Gradio界面
-#     with gr.Blocks(title="Ollama 本地对话") as app:
-#         # 标题区域
-#         gr.Markdown("## 🦙 Ollama 本地大模型对话系统")
-#
-#         # 模型选择区域
-#         models = client.get_local_models()  # 获取初始模型列表
-#         with gr.Row():  # 创建行布局
-#             # 模型下拉选择器
-#             model_dropdown = gr.Dropdown(
-#                 choices=models,  # 选项列表
-#                 value=models[0] if models else "",  # 默认值
-#                 label="选择模型",  # 标签文本
-#                 interactive=True  # 允许用户交互
-#             )
-#             # 刷新按钮
-#             refresh_btn = gr.Button("🔄 刷新模型列表")
-#
-#         # 聊天显示区域
-#         chatbot = gr.Chatbot(height=500)  # 设置聊天机器人组件高度
-#         # 用户输入框
-#         msg = gr.Textbox(label="输入问题", placeholder="在这里输入您的问题...")
-#
-#         # 控制按钮区域
-#         with gr.Row():  # 创建行布局
-#             submit_btn = gr.Button("🚀 提交")  # 提交按钮
-#             clear_btn = gr.Button("🧹 清除对话")  # 清除对话按钮
-#             stream_toggle = gr.Checkbox(label="流式响应", value=True)  # 流式模式开关
-#
-#         # 模型刷新功能
-#         def refresh_models():
-#             """刷新模型列表回调函数"""
-#             new_models = client.get_local_models()
-#             # 更新下拉框的选项和值
-#             return gr.Dropdown.update(
-#                 choices=new_models,
-#                 value=new_models[0] if new_models else None
-#             )
-#
-#         # 绑定刷新按钮事件
-#         refresh_btn.click(
-#             refresh_models,  # 触发函数
-#             inputs=[],  # 输入参数列表
-#             outputs=[model_dropdown]  # 输出组件
-#         )
-#
-#         # 消息处理函数
-#         def process_message(message, history, model_name, use_stream):
-#             """处理用户消息并生成AI响应"""
-#             # 调用生成响应方法，同时跟踪当前消息
-#             for response in client.generate_response(
-#                     message,
-#                     history,
-#                     model_name,
-#                     use_stream
-#             ):
-#                 # 构建新的聊天历史（包含当前生成的响应）
-#                 yield [(user, resp) if i != len(history) else (user, response)
-#                        for i, (user, resp) in enumerate(history + [(message, response)])]
-#
-#         # 绑定消息提交事件（回车提交）
-#         msg.submit(
-#             lambda: None,  # 占位函数（立即触发）
-#             None,  # 无输入
-#             None  # 无输出
-#         ).then(
-#             process_message,  # 主处理函数
-#             [msg, chatbot, model_dropdown, stream_toggle],  # 输入参数
-#             [chatbot],  # 输出组件
-#         ).then(lambda: "", None, [msg])  # 清空输入框
-#
-#         # 绑定提交按钮点击事件
-#         submit_btn.click(
-#             lambda: None,  # 占位函数
-#             None,
-#             None
-#         ).then(
-#             process_message,  # 主处理函数
-#             [msg, chatbot, model_dropdown, stream_toggle],
-#             [chatbot],
-#         ).then(lambda: "", None, [msg])  # 清空输入框
-#
-#         # 绑定清除对话按钮
-#         clear_btn.click(
-#             lambda: [],  # 返回空列表
-#             None,  # 无输入
-#             chatbot  # 输出到聊天组件（重置历史）
-#         )
-#
-#     # 启动应用
-#     app.launch(
-#         server_name="127.0.0.1",  # 本地主机地址
-#         server_port=7960,  # 服务端口号
-#         share=False  # 不生成公开链接
-#     )
+# 主程序入口
+if __name__ == "__main__":
+    # 导入Gradio库 - 用于构建Web UI界面
+    import gradio as gr
+
+    # 创建客户端实例
+    client = OllamaClient()
+
+    # 创建Gradio界面
+    with gr.Blocks(title="Ollama 本地对话") as app:
+        # 标题区域
+        gr.Markdown("## 🦙 Ollama 本地大模型对话系统")
+
+        # 模型选择区域
+        models = client.get_local_models()  # 获取初始模型列表
+        with gr.Row():  # 创建行布局
+            # 模型下拉选择器
+            model_dropdown = gr.Dropdown(
+                choices=models,  # 选项列表
+                value=models[0] if models else "",  # 默认值
+                label="选择模型",  # 标签文本
+                interactive=True  # 允许用户交互
+            )
+            # 刷新按钮
+            refresh_btn = gr.Button("🔄 刷新模型列表")
+
+        # 聊天显示区域
+        chatbot = gr.Chatbot(height=500)  # 设置聊天机器人组件高度
+        # 用户输入框
+        msg = gr.Textbox(label="输入问题", placeholder="在这里输入您的问题...")
+
+        # 控制按钮区域
+        with gr.Row():  # 创建行布局
+            submit_btn = gr.Button("🚀 提交")  # 提交按钮
+            clear_btn = gr.Button("🧹 清除对话")  # 清除对话按钮
+            stream_toggle = gr.Checkbox(label="流式响应", value=True)  # 流式模式开关
+
+        # 模型刷新功能
+        def refresh_models():
+            """刷新模型列表回调函数"""
+            new_models = client.get_local_models()
+            # 更新下拉框的选项和值
+            return gr.Dropdown.update(
+                choices=new_models,
+                value=new_models[0] if new_models else None
+            )
+
+        # 绑定刷新按钮事件
+        refresh_btn.click(
+            refresh_models,  # 触发函数
+            inputs=[],  # 输入参数列表
+            outputs=[model_dropdown]  # 输出组件
+        )
+
+        # 消息处理函数
+        def process_message(message, history, model_name, use_stream):
+            """处理用户消息并生成AI响应"""
+            # 调用生成响应方法，同时跟踪当前消息
+            for response in client.generate_response(
+                    message,
+                    history,
+                    model_name,
+                    use_stream
+            ):
+                # 构建新的聊天历史（包含当前生成的响应）
+                yield [(user, resp) if i != len(history) else (user, response)
+                       for i, (user, resp) in enumerate(history + [(message, response)])]
+
+        # 绑定消息提交事件（回车提交）
+        msg.submit(
+            lambda: None,  # 占位函数（立即触发）
+            None,  # 无输入
+            None  # 无输出
+        ).then(
+            process_message,  # 主处理函数
+            [msg, chatbot, model_dropdown, stream_toggle],  # 输入参数
+            [chatbot],  # 输出组件
+        ).then(lambda: "", None, [msg])  # 清空输入框
+
+        # 绑定提交按钮点击事件
+        submit_btn.click(
+            lambda: None,  # 占位函数
+            None,
+            None
+        ).then(
+            process_message,  # 主处理函数
+            [msg, chatbot, model_dropdown, stream_toggle],
+            [chatbot],
+        ).then(lambda: "", None, [msg])  # 清空输入框
+
+        # 绑定清除对话按钮
+        clear_btn.click(
+            lambda: [],  # 返回空列表
+            None,  # 无输入
+            chatbot  # 输出到聊天组件（重置历史）
+        )
+    # 启动应用
+    app.launch(
+        server_name="0.0.0.0", # 允许所有网络接口
+        # server_name=server_name,  # 本地主机地址
+        server_port=7960,  # 服务端口号
+        share=False  # 不生成公开链接
+    )

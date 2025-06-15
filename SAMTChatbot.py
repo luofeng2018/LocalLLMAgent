@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 import logging
+import socket
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s",
@@ -767,7 +769,7 @@ if __name__ == "__main__":
     demo.queue().launch(
         allowed_paths=["web_assets"],
         blocked_paths=["config.json", "files", "models", "lora", "modules", "history"],
-        server_name=server_name,
+        server_name="0.0.0.0", # 允许所有网络接口
         server_port=server_port,
         share=share,
         auth=auth_from_conf if authflag else None,
