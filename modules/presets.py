@@ -57,13 +57,13 @@ INDEX_QUERY_TEMPRATURE = 1.0
 CHUANHU_TITLE = i18n("SAMT Chat 🚀")
 
 
-ONLINE_MODELS = [
-    "GPT-4o-mini",
-    "Ollama"
-]
+# ONLINE_MODELS = [
+#     "GPT-4o-mini",
+#     "Ollama"
+# ]
 
 # TODO 写死
-client = OllamaClient()
+client = OllamaClient(API_HOST)
 LOCAL_MODELS = client.get_local_models()
 
 
@@ -108,7 +108,8 @@ for model in LOCAL_MODELS:
         "model_type": model.split("-")[0]  # 根据模型名称来推断模型类型
     }
 
-for model in ONLINE_MODELS:
+
+for model in LOCAL_MODELS:
     MODEL_METADATA[model] = {
         "model_name": model,
         "api_host": "OPENAI_API_BASE",  # 这里请根据实际情况替换
@@ -122,16 +123,16 @@ for model in ONLINE_MODELS:
 print(MODEL_METADATA)
 
 
-if os.environ.get('HIDE_LOCAL_MODELS', 'false') == 'true':
-    MODELS = ONLINE_MODELS
-else:
-    MODELS = ONLINE_MODELS + LOCAL_MODELS
+# if os.environ.get('HIDE_LOCAL_MODELS', 'false') == 'true':
+#     MODELS = ONLINE_MODELS
+# else:
+#     MODELS = ONLINE_MODELS + LOCAL_MODELS
 
-
+MODELS = LOCAL_MODELS
 MODEL_FACTORYS =["Ollama"]
 FACTORYS_API ="http://192.168.31.77:11434"
-client = OllamaClient()
-OLLAMA_MODELS = client.get_local_models()
+# client = OllamaClient()
+# OLLAMA_MODELS = client.get_local_models()
 
 
 DEFAULT_MODEL = 0

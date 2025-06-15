@@ -1,28 +1,14 @@
 from __future__ import annotations
-
-import json
-import logging
-import traceback
-import base64
-from math import ceil
-
-import colorama
-import requests
-from io import BytesIO
-import time
-
-import requests
-from PIL import Image
-
-from .. import shared
-from ..config import retrieve_proxy, sensitive_id, usage_limit
-from ..index_func import *
-from ..presets import *
-from ..utils import *
 from .base_model import BaseLLMModel
+import json
+import time
+import traceback
+from math import ceil
+from ..config import sensitive_id, usage_limit
+from ..utils import *
 
 
-class OpenAIVisionClient(BaseLLMModel):
+class OllamaVisionClient(BaseLLMModel):
     def __init__(
         self,
         model_name,
@@ -185,10 +171,6 @@ class OpenAIVisionClient(BaseLLMModel):
 
         if system_prompt is not None and "o1" not in self.model_name:
             history = [construct_system(system_prompt), *history]
-
-        # TODO 暂时写死
-        self.model_name = "deepseek-r1:1.5b"
-
 
         payload = {
             "model": self.model_name,

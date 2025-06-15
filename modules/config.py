@@ -328,22 +328,6 @@ if server_port is None:
 
 assert server_port is None or type(server_port) == int, "要求port设置为int类型"
 
-# 设置默认model
-default_model = config.get("default_model", "GPT-4o-mini")
-
-# client = OllamaClient()
-# OLLAMA_MODELS = client.get_local_models()
-# default_model = OLLAMA_MODELS[0]
-
-
-try:
-    if default_model in presets.MODELS:
-        presets.DEFAULT_MODEL = presets.MODELS.index(default_model)
-    else:
-        presets.DEFAULT_MODEL = presets.MODELS.index(next((k for k, v in presets.MODEL_METADATA.items() if v.get("model_name") == default_model), None))
-    logging.info("默认模型：" + str(presets.MODELS[presets.DEFAULT_MODEL]))
-except ValueError:
-    logging.error("你填写的默认模型" + default_model + "不存在！请从下面的列表中挑一个填写：" + str(presets.MODELS))
 
 share = config.get("share", False)
 autobrowser = config.get("autobrowser", True)
