@@ -1,4 +1,3 @@
-
 from collections import namedtuple
 import os
 import gradio as gr
@@ -13,6 +12,7 @@ def get_html(filename):
             return file.read()
     return ""
 
+
 def webpath(fn):
     if fn.startswith(shared.assets_path):
         web_path = os.path.relpath(fn, shared.chuanhu_path).replace('\\', '/')
@@ -20,7 +20,9 @@ def webpath(fn):
         web_path = os.path.abspath(fn)
     return f'file={web_path}?{os.path.getmtime(fn)}'
 
+
 ScriptFile = namedtuple("ScriptFile", ["basedir", "filename", "path"])
+
 
 def javascript_html():
     head = ""
@@ -30,11 +32,13 @@ def javascript_html():
         head += f'<script type="module" src="{webpath(script.path)}"></script>\n'
     return head
 
+
 def css_html():
     head = ""
     for cssfile in list_scripts("stylesheet", ".css"):
         head += f'<link rel="stylesheet" property="stylesheet" href="{webpath(cssfile.path)}">'
     return head
+
 
 def list_scripts(scriptdirname, extension):
     scripts_list = []
@@ -42,16 +46,22 @@ def list_scripts(scriptdirname, extension):
     if os.path.exists(scripts_dir):
         for filename in sorted(os.listdir(scripts_dir)):
             scripts_list.append(ScriptFile(shared.assets_path, filename, os.path.join(scripts_dir, filename)))
-    scripts_list = [x for x in scripts_list if os.path.splitext(x.path)[1].lower() == extension and os.path.isfile(x.path)]
+    scripts_list = [x for x in scripts_list if
+                    os.path.splitext(x.path)[1].lower() == extension and os.path.isfile(x.path)]
     return scripts_list
 
 
 def reload_javascript():
     js = javascript_html()
-    js += '<script async type="module" src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.6/marked.min.js"></script>'
-    js += '<script async type="module" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/4.1.2/spin.min.js"></script><link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spin.js/4.1.2/spin.min.css" rel="stylesheet" />'
-    js += '<script async src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.min.css" />'
-    
+    js += '<script async type="module" src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.6/marked.min.js' \
+          '"></script>'
+    js += '<script async type="module" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/4.1.2/spin.min.js' \
+          '"></script><link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spin.js/4.1.2/spin.min.css" ' \
+          'rel="stylesheet" />'
+    js += '<script async src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js' \
+          '"></script><link rel="stylesheet" ' \
+          'href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.min.css" />'
+
     meta = """
         <meta name="apple-mobile-web-app-title" content="SAMT Chat">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,5 +86,6 @@ def reload_javascript():
         return res
 
     gr.routes.templates.TemplateResponse = template_response
+
 
 GradioTemplateResponseOriginal = gr.routes.templates.TemplateResponse

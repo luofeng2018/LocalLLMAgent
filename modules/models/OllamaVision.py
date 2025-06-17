@@ -10,10 +10,10 @@ from ..utils import *
 
 class OllamaVisionClient(BaseLLMModel):
     def __init__(
-        self,
-        model_name,
-        api_key,
-        user_name=""
+            self,
+            model_name,
+            api_key,
+            user_name=""
     ) -> None:
         super().__init__(
             model_name=model_name,
@@ -23,7 +23,8 @@ class OllamaVisionClient(BaseLLMModel):
             }
         )
         if self.api_host is not None:
-            self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = shared.format_openai_host(self.api_host)
+            self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = shared.format_openai_host(
+                self.api_host)
         else:
             self.api_host, self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = shared.state.api_host, shared.state.chat_completion_url, shared.state.images_completion_url, shared.state.openai_api_base, shared.state.balance_api_url, shared.state.usage_api_url
         self._refresh_header()
@@ -66,7 +67,6 @@ class OllamaVisionClient(BaseLLMModel):
         total_token_count = response["usage"]["total_tokens"]
         return content, total_token_count
 
-
     def count_token(self, user_input):
         input_token_count = count_token(construct_user(user_input))
         if self.system_prompt is not None and len(self.all_token_counts) == 0:
@@ -106,14 +106,14 @@ class OllamaVisionClient(BaseLLMModel):
 
             # return i18n("**本月使用金额** ") + f"\u3000 ${rounded_usage}"
             return get_html("billing_info.html").format(
-                    label = i18n("本月使用金额"),
-                    usage_percent = usage_percent,
-                    rounded_usage = rounded_usage,
-                    usage_limit = usage_limit
-                )
+                label=i18n("本月使用金额"),
+                usage_percent=usage_percent,
+                rounded_usage=rounded_usage,
+                usage_limit=usage_limit
+            )
         except requests.exceptions.ConnectTimeout:
             status_text = (
-                STANDARD_ERROR_MSG + CONNECTION_TIMEOUT_MSG + ERROR_RETRIEVE_MSG
+                    STANDARD_ERROR_MSG + CONNECTION_TIMEOUT_MSG + ERROR_RETRIEVE_MSG
             )
             return status_text
         except requests.exceptions.ReadTimeout:
@@ -152,7 +152,6 @@ class OllamaVisionClient(BaseLLMModel):
             elif message["role"] == "image":
                 image_buffer.append(message["content"])
         return history
-
 
     @shared.state.switching_api_key  # 在不开启多账号模式的时候，这个装饰器不会起作用
     def _get_response(self, stream=False):
@@ -198,8 +197,9 @@ class OllamaVisionClient(BaseLLMModel):
             timeout = TIMEOUT_ALL
 
         #  TODO 暂时写死
-        self.chat_completion_url = "http://localhost:11434/v1/chat/completions"
 
+        # self.chat_completion_url = "http://172.32.19.13:11434/v1/chat/completions"
+        self.chat_completion_url = CHAT_COMPLETION_URL
 
         with retrieve_proxy():
             try:
@@ -220,7 +220,6 @@ class OllamaVisionClient(BaseLLMModel):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {sensitive_id}",
         }
-
 
     def _get_billing_data(self, billing_url):
         with retrieve_proxy():
@@ -275,7 +274,7 @@ class OllamaVisionClient(BaseLLMModel):
                     traceback.print_exc()
                     print(f"ERROR: {chunk}")
                     continue
-        if error_msg and not error_msg=="data: [DONE]":
+        if error_msg and not error_msg == "data: [DONE]":
             raise Exception(error_msg)
 
     def set_key(self, new_access_key):
@@ -313,8 +312,9 @@ class OllamaVisionClient(BaseLLMModel):
                 ai_answer = self.history[1]["content"]
                 try:
                     history = [
-                        { "role": "system", "content": SUMMARY_CHAT_SYSTEM_PROMPT},
-                        { "role": "user", "content": f"Please write a title based on the following conversation:\n---\nUser: {user_question}\nAssistant: {ai_answer}"}
+                        {"role": "system", "content": SUMMARY_CHAT_SYSTEM_PROMPT},
+                        {"role": "user",
+                         "content": f"Please write a title based on the following conversation:\n---\nUser: {user_question}\nAssistant: {ai_answer}"}
                     ]
                     response = self._single_query_at_once(history, temperature=0.0)
                     response = json.loads(response.text)

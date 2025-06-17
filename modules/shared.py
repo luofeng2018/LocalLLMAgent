@@ -1,7 +1,11 @@
-from modules.presets import CHAT_COMPLETION_URL, BALANCE_API_URL, USAGE_API_URL, API_HOST, OPENAI_API_BASE, IMAGES_COMPLETION_URL
+from modules.presets import CHAT_COMPLETION_URL, BALANCE_API_URL, USAGE_API_URL, API_HOST, OPENAI_API_BASE, \
+    IMAGES_COMPLETION_URL
 import os
 import queue
 import openai
+
+api_host = API_HOST
+
 
 def format_openai_host(api_host: str):
     api_host = api_host.rstrip("/")
@@ -15,6 +19,7 @@ def format_openai_host(api_host: str):
     balance_api_url = f"{api_host}/dashboard/billing/credit_grants"
     usage_api_url = f"{api_host}/dashboard/billing/usage"
     return chat_completion_url, images_completion_url, openai_api_base, balance_api_url, usage_api_url
+
 
 class State:
     interrupted = False
@@ -34,7 +39,8 @@ class State:
 
     def set_api_host(self, api_host: str):
         self.api_host = api_host
-        self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = format_openai_host(api_host)
+        self.chat_completion_url, self.images_completion_url, self.openai_api_base, self.balance_api_url, self.usage_api_url = format_openai_host(
+            api_host)
         os.environ["OPENAI_API_BASE"] = self.openai_api_base
 
     def reset_api_host(self):

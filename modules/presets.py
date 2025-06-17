@@ -17,8 +17,8 @@ GEMMA_TOKENIZER = None
 
 # ChatGPT 设置
 INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
-
-IPHost = "localhost:11434"  # 假设localhost是一个变量
+# TODO 这是个变量，需要界面设置
+IPHost = "172.32.19.13:11434"
 
 API_HOST = f"http://{IPHost}"  # 使用f-string拼接
 OPENAI_API_BASE = f"http://{IPHost}/v1"
@@ -57,11 +57,9 @@ INDEX_QUERY_TEMPRATURE = 1.0
 CHUANHU_TITLE = i18n("SAMT Chat 🚀")
 
 
-# TODO 写死
+# 获取本地模型数据
 client = OllamaClient(API_HOST)
 LOCAL_MODELS = client.get_local_models()
-
-
 
 DEFAULT_METADATA = {
     "repo_id": None, # HuggingFace repo id, used if this model is meant to be downloaded from HuggingFace then run locally
@@ -104,30 +102,9 @@ for model in LOCAL_MODELS:
     }
 
 
-for model in LOCAL_MODELS:
-    MODEL_METADATA[model] = {
-        "model_name": model,
-        "api_host": "OPENAI_API_BASE",  # 这里请根据实际情况替换
-        "description": model,
-        "token_limit": 64000,
-        "multimodal": False,
-        "model_type": model.split("-")[0]  # 根据模型名称来推断模型类型
-    }
-
-
-print(MODEL_METADATA)
-
-
-# if os.environ.get('HIDE_LOCAL_MODELS', 'false') == 'true':
-#     MODELS = ONLINE_MODELS
-# else:
-#     MODELS = ONLINE_MODELS + LOCAL_MODELS
-
 MODELS = LOCAL_MODELS
 MODEL_FACTORYS =["Ollama"]
-FACTORYS_API ="http://192.168.31.77:11434"
-# client = OllamaClient()
-# OLLAMA_MODELS = client.get_local_models()
+FACTORYS_API = API_HOST
 
 
 DEFAULT_MODEL = 0

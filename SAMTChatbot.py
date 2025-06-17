@@ -24,10 +24,6 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 patch_gradio()
 
 
-def create_new_model():
-    return get_model(model_name=MODELS[DEFAULT_MODEL], access_key=my_api_key)[0]
-
-
 with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     user_name = gr.Textbox("", visible=False)
     promptTemplates = gr.State(load_template(get_template_names()[0], mode=2))
@@ -68,9 +64,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                     "搜索（支持正则）..."), lines=1, elem_id="history-search-tb")
                             with gr.Column(min_width=52, scale=1, elem_id="gr-history-header-btns"):
                                 uploadHistoryBtn = gr.UploadButton(
-                                    interactive=True, label="", file_types=[".json"], elem_id="gr-history-upload-btn", type="binary")
+                                    interactive=True, label="", file_types=[".json"], elem_id="gr-history-upload-btn",
+                                    type="binary")
                                 historyRefreshBtn = gr.Button("", elem_id="gr-history-refresh-btn")
-
 
                     with gr.Row(elem_id="chuanhu-history-body"):
                         with gr.Column(scale=6, elem_id="history-select-wrap"):
@@ -114,7 +110,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
             with gr.Column(elem_id="chatbot-area"):
                 with gr.Row(elem_id="chatbot-header"):
                     model_select_dropdown = gr.Dropdown(
-                        label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL], interactive=True,
+                        label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL],
+                        interactive=True,
                         show_label=False, container=False, elem_id="model-select-dropdown", filterable=False
                     )
                     lora_select_dropdown = gr.Dropdown(
@@ -188,7 +185,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
             # For CSS setting, there is an extra box. Don't remove it.
             with gr.Group(elem_id="chuanhu-toolbox"):
                 with gr.Row():
-                    gr.Markdown("## "+i18n("工具箱"))
+                    gr.Markdown("## " + i18n("工具箱"))
                     gr.HTML(get_html("close_btn.html").format(
                         obj="toolbox"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-toolbox-tabs"):
@@ -210,10 +207,12 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             )
                             if multi_api_key:
                                 usageTxt = gr.Markdown(i18n(
-                                    "多账号模式已开启，无需输入key，可直接开始对话"), elem_id="usage-display", elem_classes="insert-block", visible=show_api_billing)
+                                    "多账号模式已开启，无需输入key，可直接开始对话"), elem_id="usage-display",
+                                    elem_classes="insert-block", visible=show_api_billing)
                             else:
                                 usageTxt = gr.Markdown(i18n(
-                                    "**发送消息** 或 **提交key** 以显示额度"), elem_id="usage-display", elem_classes="insert-block", visible=show_api_billing)
+                                    "**发送消息** 或 **提交key** 以显示额度"), elem_id="usage-display",
+                                    elem_classes="insert-block", visible=show_api_billing)
                         gr.Markdown("---", elem_classes="hr-line", visible=not HIDE_MY_KEY)
                         with gr.Accordion(label="Prompt", open=True):
                             systemPromptTxt = gr.Textbox(
@@ -224,7 +223,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                 lines=8
                             )
                             retain_system_prompt_checkbox = gr.Checkbox(
-                                label=i18n("新建对话保留Prompt"), value=False, visible=True, elem_classes="switch-checkbox")
+                                label=i18n("新建对话保留Prompt"), value=False, visible=True,
+                                elem_classes="switch-checkbox")
                             with gr.Accordion(label=i18n("加载Prompt模板"), open=False):
                                 with gr.Column():
                                     with gr.Row():
@@ -253,14 +253,29 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         gr.Markdown("---", elem_classes="hr-line")
                         with gr.Accordion(label=i18n("知识库"), open=True, elem_id="gr-kb-accordion"):
                             use_websearch_checkbox = gr.Checkbox(label=i18n(
-                                "使用在线搜索"), value=False, elem_classes="switch-checkbox", elem_id="gr-websearch-cb", visible=False)
+                                "使用在线搜索"), value=False, elem_classes="switch-checkbox", elem_id="gr-websearch-cb",
+                                visible=False)
                             index_files = gr.Files(label=i18n(
-                                "上传"), type="filepath", file_types=[".pdf", ".docx", ".pptx", ".epub", ".xlsx", ".txt", "text", "image"], elem_id="upload-index-file")
+                                "上传"), type="filepath",
+                                file_types=[".pdf", ".docx", ".pptx", ".epub", ".xlsx", ".txt", "text", "image"],
+                                elem_id="upload-index-file")
                             two_column = gr.Checkbox(label=i18n(
                                 "双栏pdf"), value=advance_docs["pdf"].get("two_column", False))
                             summarize_btn = gr.Button(i18n("总结"))
                             # TODO: 公式ocr
                             # formula_ocr = gr.Checkbox(label=i18n("识别公式"), value=advance_docs["pdf"].get("formula_ocr", False))
+
+                        with gr.Accordion(label=i18n("MCP"), open=True, elem_id="gr-kb-accordion"):
+                            # JSON 配置输入框
+                            json_input = gr.Textbox(
+                                # value=json.dumps(DEFAULT_CONFIG, indent=2),
+                                label=" 配置参数",
+                                lines=15,
+                                placeholder="在此输入 JSON 格式的配置...",
+                                info="支持所有标准的 JSON 格式参数",
+                                interactive=True
+                            )
+                            # TODO
 
                     with gr.Tab(label=i18n("参数")):
                         gr.Markdown(i18n("# ⚠️ 务必谨慎更改 ⚠️"),
@@ -353,35 +368,31 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
         with gr.Group(elem_id="chuanhu-popup"):
             with gr.Group(elem_id="chuanhu-setting"):
                 with gr.Row():
-                    gr.Markdown("## "+i18n("设置"))
+                    gr.Markdown("## " + i18n("设置"))
                     gr.HTML(get_html("close_btn.html").format(
                         obj="box"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-setting-tabs"):
                     with gr.Tab(label=i18n("模型")):
-
-                        model_select_factory= gr.Dropdown(
-                            label=i18n("模型提供方"), choices=MODEL_FACTORYS, multiselect=False, value=MODEL_FACTORYS[0],
+                        model_select_factory = gr.Dropdown(
+                            label=i18n("模型提供方"), choices=MODEL_FACTORYS, multiselect=False,
+                            value=MODEL_FACTORYS[0],
                             interactive=True
                         )
 
                         api_domain_input = gr.Textbox(
                             label=i18n("API域名"), value=FACTORYS_API, interactive=True
                         )
-                        # TODO 后续改成这个
-                        # model_select_dropdown = gr.Dropdown(
-                        #     label=i18n("选择模型"), choices=OLLAMA_MODELS, multiselect=False, value=OLLAMA_MODELS[DEFAULT_MODEL], interactive=True
-                        # )
-
                         model_select_dropdown = gr.Dropdown(
-                            label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL], interactive=True
+                            label=i18n("选择模型"), choices=MODELS, multiselect=False, value=MODELS[DEFAULT_MODEL],
+                            interactive=True
                         )
-
 
                     with gr.Tab(label=i18n("高级")):
                         gr.HTML(get_html("appearance_switcher.html").format(
                             label=i18n("切换亮暗色主题")), elem_classes="insert-block", visible=False)
                         use_streaming_checkbox = gr.Checkbox(
-                            label=i18n("实时传输回答"), value=True, visible=ENABLE_STREAMING_OPTION, elem_classes="switch-checkbox no-container"
+                            label=i18n("实时传输回答"), value=True, visible=ENABLE_STREAMING_OPTION,
+                            elem_classes="switch-checkbox no-container"
                         )
                         language_select_dropdown = gr.Dropdown(
                             label=i18n("选择回复语言（针对搜索&索引功能）"),
@@ -399,27 +410,27 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             elem_classes="no-container",
                         )
                         single_turn_checkbox = gr.Checkbox(label=i18n(
-                            "单轮对话"), value=False, elem_classes="switch-checkbox", elem_id="gr-single-session-cb", visible=False)
+                            "单轮对话"), value=False, elem_classes="switch-checkbox", elem_id="gr-single-session-cb",
+                            visible=False)
                         # checkUpdateBtn = gr.Button(i18n("🔄 检查更新..."), visible=check_update)
 
                         logout_btn = gr.Button("Logout", link="/logout")
 
-
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
                         gr.Markdown(
                             '<img alt="SAMT Chat logo" src="file=web_assets/icon/any-icon-512.png" style="max-width: 144px;">')
-                        gr.Markdown("# "+i18n("SAMT Chat"))
+                        gr.Markdown("# " + i18n("SAMT Chat"))
                         gr.HTML(get_html("footer.html").format(
                             versions=versions_html()), elem_id="footer")
                         # gr.Markdown(CHUANHU_DESCRIPTION, elem_id="description")
 
             with gr.Group(elem_id="chuanhu-training"):
                 with gr.Row():
-                    gr.Markdown("## "+i18n("训练"))
+                    gr.Markdown("## " + i18n("训练"))
                     gr.HTML(get_html("close_btn.html").format(
                         obj="box"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-training-tabs"):
-                    with gr.Tab(label="OpenAI "+i18n("微调")):
+                    with gr.Tab(label="OpenAI " + i18n("微调")):
                         openai_train_status = gr.Markdown(label=i18n("训练状态"), value=i18n(
                             "查看[使用介绍](https://github.com/GaiZhenbiao/ChuanhuChatGPT/wiki/使用教程#微调-gpt-35)"))
 
@@ -427,7 +438,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             dataset_previewjson = gr.JSON(
                                 label=i18n("数据集预览"))
                             dataset_selection = gr.Files(label=i18n("选择数据集"), file_types=[
-                                                         ".xlsx", ".jsonl"], file_count="single")
+                                ".xlsx", ".jsonl"], file_count="single")
                             upload_to_openai_btn = gr.Button(
                                 i18n("上传到OpenAI"), variant="primary", interactive=False)
 
@@ -479,7 +490,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                 historySelectBtn = gr.Button(
                     visible=False, elem_classes="invisible-btn", elem_id="history-select-btn")  # Not used
 
-    # https://github.com/gradio-app/gradio/pull/3296
 
     def create_greeting(request: gr.Request):
         if hasattr(request, "username") and request.username:  # is not None or is not ""
@@ -495,10 +505,23 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
             loaded_stuff = current_model.auto_load()
         else:
             current_model.new_auto_history_filename()
-            loaded_stuff = [gr.update(), gr.update(), gr.Chatbot(label=MODELS[DEFAULT_MODEL]), current_model.single_turn, current_model.temperature, current_model.top_p, current_model.n_choices, current_model.stop_sequence, current_model.token_upper_limit, current_model.max_generation_token, current_model.presence_penalty, current_model.frequency_penalty, current_model.logit_bias, current_model.user_identifier, gr.DownloadButton(), gr.DownloadButton()]
-        return user_info, user_name, current_model, toggle_like_btn_visibility(DEFAULT_MODEL), *loaded_stuff, init_history_list(user_name, prepend=current_model.history_file_path.rstrip(".json"))
+            loaded_stuff = [gr.update(), gr.update(), gr.Chatbot(label=MODELS[DEFAULT_MODEL]),
+                            current_model.single_turn, current_model.temperature, current_model.top_p,
+                            current_model.n_choices, current_model.stop_sequence, current_model.token_upper_limit,
+                            current_model.max_generation_token, current_model.presence_penalty,
+                            current_model.frequency_penalty, current_model.logit_bias, current_model.user_identifier,
+                            gr.DownloadButton(), gr.DownloadButton()]
+        return user_info, user_name, current_model, toggle_like_btn_visibility(
+            DEFAULT_MODEL), *loaded_stuff, init_history_list(user_name,
+                                                             prepend=current_model.history_file_path.rstrip(".json"))
+
+
     demo.load(create_greeting, inputs=None, outputs=[
-              user_info, user_name, current_model, like_dislike_area, saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn, historySelectList], api_name="load")
+        user_info, user_name, current_model, like_dislike_area, saveFileName, systemPromptTxt, chatbot,
+        single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt,
+        max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider,
+        logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn,
+        historySelectList], api_name="load")
     chatgpt_predict_args = dict(
         fn=predict,
         inputs=[
@@ -542,7 +565,10 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     load_history_from_file_args = dict(
         fn=load_chat_history,
         inputs=[current_model, historySelectList],
-        outputs=[saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn],
+        outputs=[saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+                 n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider,
+                 presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt,
+                 use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn],
     )
 
     refresh_history_args = dict(
@@ -561,22 +587,27 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     # 绑定提交信息
 
     user_input.submit(**transfer_input_args).then(**
-                                                  chatgpt_predict_args).then(**end_outputing_args).then(**auto_name_chat_history_args)
+                                                  chatgpt_predict_args).then(**end_outputing_args).then(
+        **auto_name_chat_history_args)
     user_input.submit(**get_usage_args)
 
     submitBtn.click(**transfer_input_args).then(**chatgpt_predict_args,
-                                                api_name="predict").then(**end_outputing_args).then(**auto_name_chat_history_args)
+                                                api_name="predict").then(**end_outputing_args).then(
+        **auto_name_chat_history_args)
     submitBtn.click(**get_usage_args)
 
     index_files.upload(handle_file_upload, [current_model, index_files, chatbot, language_select_dropdown], [
-                       index_files, chatbot, status_display])
+        index_files, chatbot, status_display])
     summarize_btn.click(handle_summarize_index, [
-                        current_model, index_files, chatbot, language_select_dropdown], [chatbot, status_display])
+        current_model, index_files, chatbot, language_select_dropdown], [chatbot, status_display])
 
     emptyBtn.click(
         reset,
         inputs=[current_model, retain_system_prompt_checkbox],
-        outputs=[chatbot, status_display, historySelectList, systemPromptTxt, single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox],
+        outputs=[chatbot, status_display, historySelectList, systemPromptTxt, single_turn_checkbox, temperature_slider,
+                 top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider,
+                 presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt,
+                 use_streaming_checkbox],
         show_progress=True,
         js='(a,b)=>{return clearChatbot(a,b);}',
     )
@@ -626,25 +657,30 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
     # LLM Models
     keyTxt.change(set_key, [current_model, keyTxt], [
-                  user_api_key, status_display], api_name="set_key").then(**get_usage_args)
+        user_api_key, status_display], api_name="set_key").then(**get_usage_args)
     keyTxt.submit(**get_usage_args)
     single_turn_checkbox.change(
         set_single_turn, [current_model, single_turn_checkbox], None, show_progress=False)
     use_streaming_checkbox.change(set_streaming, [current_model, use_streaming_checkbox], None, show_progress=False)
-    model_select_dropdown.change(get_model, [model_select_dropdown, lora_select_dropdown, user_api_key, temperature_slider, top_p_slider, systemPromptTxt, user_name, current_model], [
-                                 current_model, status_display, chatbot, lora_select_dropdown, user_api_key, keyTxt, modelDescription, use_streaming_checkbox], show_progress=True, api_name="get_model")
-    model_select_dropdown.change(toggle_like_btn_visibility, [model_select_dropdown], [
-                                 like_dislike_area], show_progress=False)
-    # model_select_dropdown.change(
-    #     toggle_file_type, [model_select_dropdown], [index_files], show_progress=False)
-    lora_select_dropdown.change(get_model, [model_select_dropdown, lora_select_dropdown, user_api_key, temperature_slider,
-                                top_p_slider, systemPromptTxt, user_name, current_model], [current_model, status_display, chatbot, modelDescription], show_progress=True)
+    model_select_dropdown.change(get_model,
+                                 [model_select_dropdown, lora_select_dropdown, user_api_key, temperature_slider,
+                                  top_p_slider, systemPromptTxt, user_name, current_model], [
+                                     current_model, status_display, chatbot, lora_select_dropdown, user_api_key, keyTxt,
+                                     modelDescription, use_streaming_checkbox], show_progress=True,
+                                 api_name="get_model")
+    # model_select_dropdown.change(toggle_like_btn_visibility, [model_select_dropdown], [
+    #     like_dislike_area], show_progress=False)
+
+    lora_select_dropdown.change(get_model,
+                                [model_select_dropdown, lora_select_dropdown, user_api_key, temperature_slider,
+                                 top_p_slider, systemPromptTxt, user_name, current_model],
+                                [current_model, status_display, chatbot, modelDescription], show_progress=True)
 
     # Template
     systemPromptTxt.change(set_system_prompt, [
-                           current_model, systemPromptTxt], None)
+        current_model, systemPromptTxt], None)
     templateRefreshBtn.click(get_template_dropdown, None, [
-                             templateFileSelectDropdown])
+        templateFileSelectDropdown])
     templateFileSelectDropdown.input(
         load_template,
         [templateFileSelectDropdown],
@@ -667,7 +703,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
         js='(a,b,c,d)=>{return saveChatHistory(a,b,c,d);}'
     )
     historyRefreshBtn.click(**refresh_history_args)
-    historyDeleteBtn.click(delete_chat_history, [current_model, historySelectList], [status_display, historySelectList, chatbot], js='(a,b,c)=>{return showConfirmationDialog(a, b, c);}').then(
+    historyDeleteBtn.click(delete_chat_history, [current_model, historySelectList],
+                           [status_display, historySelectList, chatbot],
+                           js='(a,b,c)=>{return showConfirmationDialog(a, b, c);}').then(
         reset,
         inputs=[current_model, retain_system_prompt_checkbox],
         outputs=[chatbot, status_display, historySelectList, systemPromptTxt],
@@ -676,7 +714,10 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     )
     historySelectList.select(**load_history_from_file_args)
     uploadHistoryBtn.upload(upload_chat_history, [current_model, uploadHistoryBtn], [
-                        saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn, historySelectList]).then(**refresh_history_args)
+        saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+        n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider,
+        frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn,
+        downloadHistoryMarkdownBtn, historySelectList]).then(**refresh_history_args)
     historySearchTextbox.input(
         filter_history,
         [user_name, historySearchTextbox],
@@ -685,21 +726,21 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
     # Train
     dataset_selection.upload(handle_dataset_selection, dataset_selection, [
-                             dataset_previewjson, upload_to_openai_btn, openai_train_status])
+        dataset_previewjson, upload_to_openai_btn, openai_train_status])
     dataset_selection.clear(handle_dataset_clear, [], [
-                            dataset_previewjson, upload_to_openai_btn])
+        dataset_previewjson, upload_to_openai_btn])
     upload_to_openai_btn.click(upload_to_openai, [dataset_selection], [
-                               openai_ft_file_id, openai_train_status], show_progress=True)
+        openai_ft_file_id, openai_train_status], show_progress=True)
 
     openai_ft_file_id.change(lambda x: gr.update(interactive=True) if len(
         x) > 0 else gr.update(interactive=False), [openai_ft_file_id], [openai_start_train_btn])
     openai_start_train_btn.click(start_training, [
-                                 openai_ft_file_id, openai_ft_suffix, openai_train_epoch_slider], [openai_train_status])
+        openai_ft_file_id, openai_ft_suffix, openai_train_epoch_slider], [openai_train_status])
 
     openai_status_refresh_btn.click(get_training_status, [], [
-                                    openai_train_status, add_to_models_btn])
+        openai_train_status, add_to_models_btn])
     add_to_models_btn.click(add_to_models, [], [
-                            model_select_dropdown, openai_train_status], show_progress=True)
+        model_select_dropdown, openai_train_status], show_progress=True)
     openai_cancel_all_jobs_btn.click(
         cancel_all_jobs, [], [openai_train_status], show_progress=True)
 
@@ -722,7 +763,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     logit_bias_txt.input(
         set_logit_bias, [current_model, logit_bias_txt], None, show_progress=False)
     user_identifier_txt.input(set_user_identifier, [
-                               current_model, user_identifier_txt], None, show_progress=False)
+        current_model, user_identifier_txt], None, show_progress=False)
 
     # default_btn.click(
     #     reset_default, [], [apihostTxt, proxyTxt, status_display], show_progress=True
@@ -757,22 +798,11 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     historySelectBtn.click(  # This is an experimental feature... Not actually used.
         fn=load_chat_history,
         inputs=[current_model, historySelectList],
-        outputs=[saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider, presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt, use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn],
+        outputs=[saveFileName, systemPromptTxt, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+                 n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider,
+                 presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt,
+                 use_streaming_checkbox, downloadHistoryJSONBtn, downloadHistoryMarkdownBtn],
         js='(a,b)=>{return bgSelectHistory(a,b);}'
     )
 # 默认开启本地服务器，默认可以直接从IP访问，默认不创建公开分享链接
 demo.title = i18n("SAMT Chat 🚀")
-
-if __name__ == "__main__":
-    reload_javascript()
-    setup_wizard()
-    demo.queue().launch(
-        allowed_paths=["web_assets"],
-        blocked_paths=["config.json", "files", "models", "lora", "modules", "history"],
-        server_name="0.0.0.0", # 允许所有网络接口
-        server_port=server_port,
-        share=share,
-        auth=auth_from_conf if authflag else None,
-        favicon_path="./web_assets/favicon.ico",
-        inbrowser=autobrowser and not dockerflag,  # 禁止在docker下开启inbrowser
-    )
